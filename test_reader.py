@@ -2,6 +2,8 @@ from unittest import TestCase
 
 import reader
 
+from plan import Plan
+
 
 class ReaderTest(TestCase):
     def test_read_file(self):
@@ -138,3 +140,11 @@ class ReaderTest(TestCase):
             ],
         ]
         self.assertEqual(expected, batch)
+
+
+class PlanTest(TestCase):
+    def test_makespan(self):
+        batch = reader.read_sample_batch()
+        perm = [14, 16, 13, 8, 7, 10, 12, 4, 2, 0, 18, 6, 15, 5, 17, 1, 3, 9, 19, 11]
+        plan = Plan(batch, perm)
+        self.assertEqual(1294, plan.makespan())
