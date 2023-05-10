@@ -40,6 +40,7 @@ class Plan:
         self._makespan = self.get_end_time(num_machines - 1, num_tasks - 1)
 
     def machine_stats(self):
+        self.calc()
         num_machines, num_tasks = shape(self.batch)
         for i in range(num_machines):
             start_time = self._times[i][0]
@@ -50,6 +51,7 @@ class Plan:
             yield i, start_time, end_time, idle_time
 
     def job_stats(self):
+        self.calc()
         num_machines, num_tasks = shape(self.batch)
         for i in range(num_tasks):
             task_idx = self.perm.index(i)
