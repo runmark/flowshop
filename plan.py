@@ -85,6 +85,32 @@ class Plan:
             print_row(task_idx + 1, start_time, end_time, idle_time)
 
 
+class PlanCache:
+    def __init__(self, batch):
+        self.batch = batch
+        self._cache = {}
+        self.use_count = 0
+        self.hit_count = 0
+
+    def __getitem__(self, perm):
+        self.use_count += 1
+        key = tuple(perm)
+
+        if key in self._cache:
+            self.hit_count = 0
+        else:
+            plan = Plan(self.batch, perm)
+            self._cache[key] = plan
+
+        return self._cache[key]
+
+    def dump(self):
+        hit_rate = self.hit_count / self.use_count
+        print(
+            f"Cache usage: Used {self.use_count} times, Hit Rate={hit_rate * 100:.1f}%"
+        )
+
+
 def main():
     batch = reader.read_sample_batch()
     perm = [14, 16, 13, 8, 7, 10, 12, 4, 2, 0, 18, 6, 15, 5, 17, 1, 3, 9, 19, 11]

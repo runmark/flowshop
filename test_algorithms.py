@@ -1,5 +1,6 @@
 from functools import partial
 from unittest import TestCase
+from problem import Problem
 
 import reader
 from plan import Plan
@@ -17,9 +18,10 @@ def create_test_plan():
 class FindNeighborsTest(TestCase):
     def setUp(self):
         self.plan = create_test_plan()
+        self.ctx = Problem(self.plan.batch)
 
     def _test_finder(self, fn):
-        candidates = fn(self.plan)
+        candidates = fn(self.ctx, self.plan)
         for perm in candidates:
             self.assertEqual(len(perm), len(self.plan.perm))
 
@@ -43,7 +45,8 @@ class FindNeighborsTest(TestCase):
 class ChooseNeighborTest(TestCase):
     def setUp(self):
         self.plan = create_test_plan()
-        self.candidates = finders.rand(self.plan, num=100)
+        self.ctx = Problem(self.plan.batch)
+        self.candidates = finders.rand(self.ctx, self.plan, num=100)
 
     def _test_chooser(self, fn):
         perm = fn(self.plan, self.candidates)

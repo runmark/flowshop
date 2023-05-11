@@ -3,22 +3,22 @@ import random
 from plan import Plan
 
 
-def rand(plan, candidates):
+def rand(ctx, plan, candidates):
     return random.choice(candidates)
 
 
-def hillclimbing(plan, candidates):
+def hillclimbing(ctx, plan, candidates):
     """
     choose best from candidates
     """
-    plans = [Plan(plan.batch, c) for c in candidates]
+    plans = [ctx.cache[c] for c in candidates]
     plans.sort(key=lambda x: x.makespan())
 
     return plans[0].perm
 
 
-def random_hillclimbing(plan, candidates):
-    plans = [Plan(plan.batch, c) for c in candidates]
+def random_hillclimbing(ctx, plan, candidates):
+    plans = [ctx.cache[c] for c in candidates]
     plans.sort(key=lambda x: x.makespan())
 
     subset_size = int(len(plans) / 2)

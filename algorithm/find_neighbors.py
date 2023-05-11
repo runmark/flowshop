@@ -6,7 +6,7 @@ from param import MAX_LNS_NEIGHBORS
 from plan import Plan
 
 
-def rand(plan, num=1):
+def rand(ctx, plan, num=1):
     def shuffle_tasks():
         perm = plan.perm[:]
         random.shuffle(perm)
@@ -15,7 +15,7 @@ def rand(plan, num=1):
     return [shuffle_tasks() for _ in range(num)]
 
 
-def swap(plan):
+def swap(ctx, plan):
     """
     1. combination index from perm indexes
     2. swap_perm(i, j)
@@ -30,7 +30,7 @@ def swap(plan):
     return [swap_perm(*swap_indexes) for swap_indexes in it.combinations(indexes, 2)]
 
 
-def lns(plan, size=3):
+def lns(ctx, plan, size=3):
     """ """
     candidates = []
     indexes = range(len(plan.perm))
@@ -48,14 +48,14 @@ def lns(plan, size=3):
             for i in range(len(ordering)):
                 perm[subset[i]] = plan.perm[ordering[i]]
 
-            curr_plan = Plan(plan.batch, perm)
+            curr_plan = ctx.cache[perm]
             if curr_plan.makespan() < best_plan.makespan():
                 best_plan = curr_plan
         candidates.append(best_plan.perm)
     return candidates
 
 
-def idle(plan, size=2):
+def idle(ctx, plan, size=2):
     candidates = []
     stats = list(plan.job_stats())
 

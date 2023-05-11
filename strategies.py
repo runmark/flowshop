@@ -12,6 +12,11 @@ class Strategy:
         self.finder = finder
         self.chooser = chooser
 
+        self.weight = 1
+        self.spent_time = 0
+        self.improvements = 0
+        self.usage = 0
+
 
 class StrategyList(UserList):
     def __init__(self):
@@ -27,4 +32,10 @@ class StrategyList(UserList):
         super().__init__(strateties)
 
     def pick(self):
-        return random.choice(self)
+        strategies = self.copy()
+        strategies.sort(key=lambda x: x.weight, reverse=True)
+
+        subset_size = int(len(strategies) / 3)
+        subset = strategies[:subset_size]
+
+        return random.choice(subset)
